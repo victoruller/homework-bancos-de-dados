@@ -1,1 +1,0 @@
-Todos os nomes e senhas do sql são "victor"
