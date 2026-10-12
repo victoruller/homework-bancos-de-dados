@@ -1,0 +1,79 @@
+--ATIVIDADE A
+
+--REASSIGN OWNED BY usuario_admin TO postgres;
+--DROP OWNED BY usuario_admin;
+--DROP USER IF EXISTS usuario_admin;
+CREATE USER usuario_admin WITH PASSWORD '123456';
+
+--REASSIGN OWNED BY usuario_leitura TO postgres;
+--DROP OWNED BY usuario_leitura;
+--DROP USER IF EXISTS usuario_leitura;
+CREATE USER usuario_leitura WITH PASSWORD '654321';
+
+--REASSIGN OWNED BY usuario_escrita TO postgres;
+--DROP OWNED BY usuario_escrita;
+--DROP USER IF EXISTS usuario_escrita;
+CREATE USER usuario_escrita WITH PASSWORD '456123';
+
+
+--ATIVIDADE B
+CREATE TABLE IF NOT EXISTS dados_importantes (
+    id serial PRIMARY KEY,
+    informacao VarChar(100)
+);
+
+--ATIVIDADE C
+INSERT INTO dados_importantes(informacao) VALUES
+('caiu no chão'),
+('andou durante 3 minutos');
+
+
+GRANT ALL PRIVILEGES ON dados_importantes TO usuario_admin;
+GRANT SELECT ON dados_importantes TO usuario_leitura;
+GRANT INSERT, UPDATE ON dados_importantes TO usuario_escrita;
+
+
+
+--ATIVIDADE E
+REVOKE UPDATE ON dados_importantes FROM usuario_escrita;
+GRANT SELECT ON dados_importantes TO usuario_escrita;
+REVOKE ALL PRIVILEGES ON dados_importantes FROM usuario_admin;
+
+
+
+
+--NO USUÁRIO LEITURA----------------------------------------------
+--ATIVIDADE D
+INSERT INTO dados_importantes(informacao) VALUES
+('limpou'),
+('1234');
+-- ERRO: permissão negada para tabela dados_importantes
+-------------------------------------------------------------------
+
+
+
+-- NO USUÁRIO ESCRITA------------------------------------------------------
+--ATIVIDADE D
+SELECT * FROM dados_importantes;
+-- ERRO: permissão negada para tabela dados_importantes
+
+
+--ATIVIDADE F
+SELECT * FROM dados_importantes;
+UPDATE dados_importantes SET informacao = 'adriano';
+--SELECT SEM ERROS, 
+--UPDATE COM ERRO: permissão negada para tabela dados_importantes
+----------------------------------------------------------------------------
+
+
+
+--NO USUÁRIO ADMIN---------------------------------------------------------
+--ATIVIDADE F
+SELECT * FROM dados_importantes;
+UPDATE dados_importantes SET informacao = 'adriano';
+DELETE FROM dados_importantes WHERE id = 2;
+INSERT INTO dados_importantes(informacao) VALUES
+('limpou'),
+('1234');
+--ERRO: permissão negada para tabela dados_importantes
+----------------------------------------------------------------------------
